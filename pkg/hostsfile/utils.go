@@ -1,4 +1,4 @@
-package hosts
+package hostsfile
 
 import (
 	"fmt"
@@ -13,6 +13,15 @@ func itemInSlice(item string, list []string) bool {
 	}
 
 	return false
+}
+
+func removeFromSlice(s string, slice []string) []string {
+	for key, value := range slice {
+		if value == s {
+			return append(slice[:key], slice[key+1:]...)
+		}
+	}
+	return nil
 }
 
 func sliceContainsItem(item string, list []string) bool {

@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/luthermonson/goodhosts/pkg/hosts"
+	hosts "github.com/luthermonson/goodhosts/pkg/hostsfile"
 	"github.com/urfave/cli"
 )
 

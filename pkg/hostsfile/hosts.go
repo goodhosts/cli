@@ -79,9 +79,6 @@ func (h *Hosts) Load() error {
 
 // Flush any changes made to hosts file.
 func (h Hosts) Flush() error {
-	for key, value := range h.Lines {
-		fmt.Println(key, value)
-	}
 	file, err := os.Create(h.Path)
 	if err != nil {
 		return err

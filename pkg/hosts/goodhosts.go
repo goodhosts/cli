@@ -1,4 +1,4 @@
-package goodhosts
+package hosts
 
 import (
 	"bufio"
@@ -158,6 +158,12 @@ func (h Hosts) HasHostname(host string) bool {
 	return pos != -1
 }
 
+func (h Hosts) HasIp(ip string) bool {
+	pos := h.getIpPosition(ip)
+
+	return pos != -1
+}
+
 // Remove an entry from the hosts file.
 func (h *Hosts) Remove(ip string, hosts ...string) error {
 	var outputLines []HostsLine
@@ -207,6 +213,16 @@ func (h *Hosts) RemoveByHostname(host string) error {
 	return nil
 }
 
+func (h *Hosts) RemoveByIp(ip string) error {
+	pos := h.getIpPosition(ip)
+	for pos > -1 {
+		h.removeByPosition(pos)
+		pos = h.getIpPosition(ip)
+	}
+
+	return nil
+}
+
 func (h *Hosts) removeByPosition(pos int) {
 	h.Lines[pos] = h.Lines[len(h.Lines)-1]
 	h.Lines = h.Lines[:len(h.Lines)-1]
@@ -251,20 +267,22 @@ func (h Hosts) getIpPosition(ip string) int {
 	return -1
 }
 
-// Return a new instance of ``Hosts``.
+// Return a new instance of ``Hosts`` using the default hosts file path.
 func NewHosts() (Hosts, error) {
-	osHostsFilePath := ""
+	osHostsFilePath := os.ExpandEnv(filepath.FromSlash(hostsFilePath))
 
-	if os.Getenv("HOSTS_PATH") == "" {
-		osHostsFilePath = os.ExpandEnv(filepath.FromSlash(hostsFilePath))
-	} else {
-		osHostsFilePath = os.Getenv("HOSTS_PATH")
+	if env, isset := os.LookupEnv("HOSTS_PATH"); isset && len(env) > 0 {
+		osHostsFilePath = os.ExpandEnv(filepath.FromSlash(env))
 	}
 
+	return NewCustomHosts(osHostsFilePath)
+}
+
+// Return a new instance of ``Hosts`` using a custom hosts file path.
+func NewCustomHosts(osHostsFilePath string) (Hosts, error) {
 	hosts := Hosts{Path: osHostsFilePath}
 
-	err := hosts.Load()
-	if err != nil {
+	if err := hosts.Load(); err != nil {
 		return hosts, err
 	}
 

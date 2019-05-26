@@ -1,4 +1,4 @@
-package goodhosts
+package hosts
 
 import (
 	"fmt"

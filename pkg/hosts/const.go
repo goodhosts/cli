@@ -1,6 +1,6 @@
 // +build linux darwin
 
-package goodhosts
+package hosts
 
 const hostsFilePath = "/etc/hosts"
 const eol = "\n"

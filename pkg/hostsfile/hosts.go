@@ -235,7 +235,7 @@ func (h Hosts) getHostnamePosition(host string) int {
 	for i := range h.Lines {
 		line := h.Lines[i]
 		if !line.IsComment() && line.Raw != "" {
-			if sliceContainsItem(host, line.Hosts) {
+			if itemInSlice(host, line.Hosts) {
 				return i
 			}
 		}

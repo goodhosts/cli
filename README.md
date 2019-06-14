@@ -2,15 +2,11 @@
 
 Simple [hosts file](http://en.wikipedia.org/wiki/Hosts_%28file%29) (```/etc/hosts```) management in Go (golang).
 
-<img src="http://www.hangthebankers.com/wp-content/uploads/2013/09/Masks-Rothschild-party1.jpg" width=400><br>
-[A Surrealist Parisian Dinner Party chez Madame Rothschild, 1972](http://www.messynessychic.com/2013/08/27/a-surrealist-parisian-dinner-party-chez-madame-rothschild-1972/)
-
-[![Build Status](https://travis-ci.org/lextoumbourou/goodhosts.svg)](https://travis-ci.org/lextoumbourou/goodhosts)
-
 ## Features
 
-* List, add, remove and check hosts file entries from code or the command-line.
-* Windows support.
+* List, add, remove and check hosts file entries from code or the command-line
+* Windows support
+* Custom hosts file support
 
 ## Command-Line Usage
 
@@ -79,121 +75,7 @@ $ goodhosts rm 127.0.0.1 facebook.com twitter.com gmail.com
 $ goodhosts --help
 ```
 
-## API Usage
-
-### Installation
-
-```bash
-$ go get github.com/lextoumbourou/goodhosts
-```
-
-### List entries
-
-```go
-package main
-
-import (
-    "fmt"
-    "github.com/lextoumbourou/goodhosts"
-)
-
-func main() {
-    hosts := goodhosts.NewHosts()
-
-    for _, line := range hosts.Lines {
-        fmt.Println(line.Raw)
-    }
-}
-```
-
-### Check for an entry
-
-```go
-package main
-
-import (
-    "fmt"
-    "github.com/lextoumbourou/goodhosts"
-)
-
-func main() {
-    hosts := goodhosts.NewHosts()
-
-    if hosts.Has("127.0.0.1", "facebook.com") {
-        fmt.Println("Entry exists!")
-        return
-    }
-
-    fmt.Println("Entry doesn't exist!")
-}
-```
-
-### Add an entry
-
-```go
-package main
-
-import (
-    "fmt"
-    "github.com/lextoumbourou/goodhosts"
-)
-
-func main() {
-    hosts := goodhosts.NewHosts()
-
-    // Note that nothing will be added to the hosts file until ``hosts.Flush`` is called.
-    hosts.Add("127.0.0.1", "facebook.com", "twitter.com")
-
-    if err := hosts.Flush(); err != nil {
-        panic(err)
-    }
-}
-```
-
-### Remove an entry
-
-```go
-package main
-
-import (
-    "fmt"
-    "github.com/lextoumbourou/goodhosts"
-)
-
-func main() {
-    hosts := goodhosts.NewHosts()
-
-    // Same deal, yo: call hosts.Flush() to make permanent.
-    hosts.Remove("127.0.0.1", "facebook.com", "twitter.com")
-
-    if err := hosts.Flush(); err != nil {
-        panic(err)
-    }
-}
-```
-
-### [More](API.md)
-
-## Changelog
-
-### 2.1.0 (2015-06-08)
-
-* Added Windows support.
-* Added command-line docs.
-
-### 2.0.0 (2015-05-04)
-
-* Breaking API change.
-* Add support for adding and removing multiple hosts.
-* Added ``--all`` flag.
-* Handle malformed IP addresses.
-
-### 1.0.0 (2015-05-03)
-
-- Initial release.
-
 ## License
 
 [MIT](LICENSE)
 
-<img src="http://static.messynessychic.com/wp-content/uploads/2013/08/rothschildparty2.jpg" width=400><br>

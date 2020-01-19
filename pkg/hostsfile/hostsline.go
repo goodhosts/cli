@@ -38,10 +38,24 @@ func NewHostsLine(raw string) HostsLine {
 }
 
 // Return ```true``` if the line is a comment.
-func (l HostsLine) IsComment() bool {
+func (l *HostsLine) IsComment() bool {
 	trimLine := strings.TrimSpace(l.Raw)
 	isComment := strings.HasPrefix(trimLine, commentChar)
 	return isComment
+}
+
+func (l *HostsLine) IsValid() bool {
+	if l.IP != "" {
+		return true
+	}
+	return false
+}
+
+func (l *HostsLine) IsMalformed() bool {
+	if l.Err != nil {
+		return true
+	}
+	return false
 }
 
 func (l *HostsLine) RegenRaw() {

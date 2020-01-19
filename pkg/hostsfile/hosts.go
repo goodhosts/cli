@@ -27,7 +27,9 @@ func NewHosts() (Hosts, error) {
 
 // Return a new instance of ``Hosts`` using a custom hosts file path.
 func NewCustomHosts(osHostsFilePath string) (Hosts, error) {
-	hosts := Hosts{Path: osHostsFilePath}
+	hosts := Hosts{
+		Path: osHostsFilePath,
+	}
 
 	if err := hosts.Load(); err != nil {
 		return hosts, err

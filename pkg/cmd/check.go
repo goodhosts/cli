@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
-func Check() cli.Command {
-	return cli.Command{
+func Check() *cli.Command {
+	return &cli.Command{
 		Name:      "check",
 		Aliases:   []string{"c"},
 		Usage:     "Check if ip or host exists",
@@ -17,7 +17,7 @@ func Check() cli.Command {
 	}
 }
 func check(c *cli.Context) error {
-	if len(c.Args()) < 1 {
+	if c.Args().Len() < 1 {
 		fmt.Println("No input, pass an ip address or hostname to check.")
 		return nil
 	}

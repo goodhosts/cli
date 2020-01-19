@@ -6,12 +6,11 @@ import (
 	"strings"
 
 	"github.com/luthermonson/goodhosts/pkg/hostsfile"
-
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
-func Remove() cli.Command {
-	return cli.Command{
+func Remove() *cli.Command {
+	return &cli.Command{
 		Name:      "remove",
 		Aliases:   []string{"rm", "r"},
 		Usage:     "Remove ip or host(s) if exists",
@@ -26,34 +25,34 @@ func remove(c *cli.Context) error {
 		return err
 	}
 
-	if len(args) == 0 {
+	if args.Len() == 0 {
 		return cli.NewExitError("No input.", 1)
 	}
 
-	if len(args) == 1 { //could be ip or hostname
-		return processSingleArg(hostsfile, args[0])
+	if args.Len() == 1 { //could be ip or hostname
+		return processSingleArg(hostsfile, args.Slice()[0])
 	}
 
 	uniqueHosts := map[string]bool{}
 	var hostEntries []string
 
-	for i := 1; i < len(args); i++ {
-		uniqueHosts[args[i]] = true
+	for i := 1; i < args.Len(); i++ {
+		uniqueHosts[args.Slice()[i]] = true
 	}
 
 	for key, _ := range uniqueHosts {
 		hostEntries = append(hostEntries, key)
 	}
 
-	if net.ParseIP(args[0]) != nil {
-		if hostsfile.HasIp(args[0]) {
-			err = hostsfile.Remove(args[0], hostEntries...)
+	if net.ParseIP(args.Slice()[0]) != nil {
+		if hostsfile.HasIp(args.Slice()[0]) {
+			err = hostsfile.Remove(args.Slice()[0], hostEntries...)
 			if err != nil {
 				return cli.NewExitError(err.Error(), 2)
 			}
 		}
 	} else {
-		hostEntries = append(hostEntries, args[0])
+		hostEntries = append(hostEntries, args.Slice()[0])
 		for _, value := range hostEntries {
 			hostsfile.RemoveByHostname(value)
 		}

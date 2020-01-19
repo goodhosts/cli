@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
-func Add() cli.Command {
-	return cli.Command{
+func Add() *cli.Command {
+	return &cli.Command{
 		Name:      "add",
 		Aliases:   []string{"a"},
 		Usage:     "Add an entry to the hostsfile",
@@ -20,7 +20,7 @@ func add(c *cli.Context) error {
 
 	args := c.Args()
 
-	if len(args) < 2 {
+	if args.Len() < 2 {
 		fmt.Println("Adding an entry requires an ip and a hostname.")
 		return nil
 	}
@@ -30,12 +30,12 @@ func add(c *cli.Context) error {
 		return err
 	}
 
-	ip := args[0]
+	ip := args.Slice()[0]
 	uniqueHosts := map[string]bool{}
 	var hostEntries []string
 
-	for i := 1; i < len(args); i++ {
-		uniqueHosts[args[i]] = true
+	for i := 1; i < args.Len(); i++ {
+		uniqueHosts[args.Slice()[i]] = true
 	}
 
 	for key, _ := range uniqueHosts {

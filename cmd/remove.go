@@ -1,11 +1,11 @@
 package cmd
 
 import (
-	"fmt"
 	"net"
 	"strings"
 
 	"github.com/goodhosts/hostsfile"
+	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
 
@@ -26,7 +26,7 @@ func remove(c *cli.Context) error {
 	}
 
 	if args.Len() == 0 {
-		return cli.NewExitError("No input.", 1)
+		return cli.NewExitError("no input", 1)
 	}
 
 	if args.Len() == 1 { //could be ip or hostname
@@ -63,13 +63,13 @@ func remove(c *cli.Context) error {
 		return cli.NewExitError(err.Error(), 2)
 	}
 
-	fmt.Printf("Removed: %s\n", strings.Join(hostEntries, " "))
-	return nil
+	logrus.Infof("entry removed: %s\n", strings.Join(hostEntries, " "))
+	return debugFooter(c)
 }
 
 func processSingleArg(hostsfile hostsfile.Hosts, arg string) error {
 	if net.ParseIP(arg) != nil {
-		fmt.Printf("Removing ip %s\n", arg)
+		logrus.Infof("removing ip %s\n", arg)
 		if err := hostsfile.RemoveByIp(arg); err != nil {
 			return err
 		}
@@ -80,7 +80,7 @@ func processSingleArg(hostsfile hostsfile.Hosts, arg string) error {
 		return nil
 	}
 
-	fmt.Printf("Removing hostname %s\n", arg)
+	logrus.Infof("removing hostname %s\n", arg)
 
 	if err := hostsfile.RemoveByHostname(arg); err != nil {
 		return err

@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
 
@@ -14,8 +15,9 @@ func List() *cli.Command {
 		Action:  list,
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
-				Name:  "all",
-				Usage: "Show all entries in the hosts file including commented lines.",
+				Name:    "all",
+				Aliases: []string{"a"},
+				Usage:   "Show all entries in the hosts file including commented lines.",
 			},
 		},
 	}
@@ -39,7 +41,7 @@ func list(c *cli.Context) error {
 			lineOutput = fmt.Sprintf("%s # <<< Malformed!", lineOutput)
 		}
 
-		fmt.Println(lineOutput)
+		logrus.Infof(lineOutput)
 	}
 
 	return debugFooter(c)

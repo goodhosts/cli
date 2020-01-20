@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
 
@@ -18,7 +19,7 @@ func Check() *cli.Command {
 }
 func check(c *cli.Context) error {
 	if c.Args().Len() < 1 {
-		fmt.Println("No input, pass an ip address or hostname to check.")
+		logrus.Infof("No input, pass an ip address or hostname to check.")
 		return nil
 	}
 
@@ -30,13 +31,13 @@ func check(c *cli.Context) error {
 
 	if net.ParseIP(input) != nil {
 		if hostsfile.HasIp(input) {
-			fmt.Printf("%s exists in hosts life\n", input)
+			logrus.Infof("%s exists in hosts file\n", input)
 			return nil
 		}
 	}
 
 	if hostsfile.HasHostname(input) {
-		fmt.Printf("%s exists in hosts life\n", input)
+		logrus.Infof("%s exists in hosts file\n", input)
 		return nil
 	}
 

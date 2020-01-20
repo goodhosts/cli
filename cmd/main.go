@@ -2,10 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/goodhosts/hostsfile"
 	"github.com/olekukonko/tablewriter"
+	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
 
@@ -22,6 +24,7 @@ func Commands() []*cli.Command {
 		Debug(),
 		Backup(),
 		Restore(),
+		Edit(),
 	}
 }
 
@@ -30,13 +33,15 @@ func DefaultAction(c *cli.Context) error {
 }
 
 func loadHostsfile(c *cli.Context) (hostsfile.Hosts, error) {
-	customHostsfile := c.String("custom")
+	customHostsfile := c.String("file")
 	var hfile hostsfile.Hosts
 	var err error
 
 	if customHostsfile != "" {
+		logrus.Debugf("loading custom hosts file: %s\n", customHostsfile)
 		hfile, err = hostsfile.NewCustomHosts(customHostsfile)
 	} else {
+		logrus.Debugf("loading default hosts file: %s\n", hostsfile.HostsFilePath)
 		hfile, err = hostsfile.NewHosts()
 	}
 
@@ -61,7 +66,7 @@ func debugFooter(c *cli.Context) error {
 		return err
 	}
 
-	fmt.Printf("%s\n", hostsfile.Path)
+	logrus.Infof("hosts file path: %s\n", hostsfile.Path)
 
 	var comments, empty, entry, malformed int
 	for _, line := range hostsfile.Lines {
@@ -100,4 +105,31 @@ func debugFooter(c *cli.Context) error {
 	table.Render()
 
 	return nil
+}
+
+func copyFile(src, dst string) (int64, error) {
+	logrus.Debugf("copying file: src %s, dst %s",
+		src, dst)
+	sourceFileStat, err := os.Stat(src)
+	if err != nil {
+		return 0, err
+	}
+
+	if !sourceFileStat.Mode().IsRegular() {
+		return 0, fmt.Errorf("%s is not a regular file", src)
+	}
+
+	source, err := os.Open(src)
+	if err != nil {
+		return 0, err
+	}
+	defer source.Close()
+
+	destination, err := os.Create(dst)
+	if err != nil {
+		return 0, err
+	}
+	defer destination.Close()
+	nBytes, err := io.Copy(destination, source)
+	return nBytes, err
 }

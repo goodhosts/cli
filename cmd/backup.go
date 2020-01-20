@@ -1,8 +1,9 @@
 package cmd
 
 import (
-	"fmt"
+	"path/filepath"
 
+	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
 
@@ -22,6 +23,22 @@ func Backup() *cli.Command {
 }
 
 func backup(c *cli.Context) error {
-	fmt.Println("todo")
+	hostsfile, err := loadHostsfile(c)
+	if err != nil {
+		return err
+	}
+
+	output := c.String("output")
+	if output == "" {
+		output = filepath.Join(
+			filepath.Dir(hostsfile.Path),
+			"."+filepath.Base(hostsfile.Path))
+	}
+
+	_, err = copyFile(hostsfile.Path, output)
+	if err != nil {
+		return err
+	}
+	logrus.Infof("backup complete")
 	return debugFooter(c)
 }

@@ -1,8 +1,9 @@
 package cmd
 
 import (
-	"fmt"
+	"path/filepath"
 
+	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
 
@@ -14,7 +15,7 @@ func Restore() *cli.Command {
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:    "input",
-				Aliases: []string{"o"},
+				Aliases: []string{"i"},
 				Usage:   "File location to restore a backup from, default <hostsdir>/.hosts",
 			},
 		},
@@ -22,6 +23,23 @@ func Restore() *cli.Command {
 }
 
 func restore(c *cli.Context) error {
-	fmt.Println("todo")
+	hostsfile, err := loadHostsfile(c)
+	if err != nil {
+		// debug only, no problem if file doesn't exist we just need path
+		logrus.Debugf("destination hosts file not found: %s", hostsfile.Path)
+	}
+
+	input := c.String("input")
+	if input == "" {
+		input = filepath.Join(
+			filepath.Dir(hostsfile.Path),
+			"."+filepath.Base(hostsfile.Path))
+	}
+
+	_, err = copyFile(input, hostsfile.Path)
+	if err != nil {
+		return err
+	}
+
 	return debugFooter(c)
 }

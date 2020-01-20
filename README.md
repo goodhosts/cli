@@ -1,4 +1,4 @@
-# Goodhosts, fork of Lex Toumbourou's project [goodhosts](https://github.com/lextoumbourou/goodhosts)
+# goodhosts cli, fork of Lex Toumbourou's project [goodhosts](https://github.com/lextoumbourou/goodhosts)
 
 Simple [hosts file](http://en.wikipedia.org/wiki/Hosts_%28file%29) (```/etc/hosts```) management in a Go cli. One simple
 interface for any OS or architecture, script and automate hosts file updates using one simple tool.

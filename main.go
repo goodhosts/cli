@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 
 	"github.com/goodhosts/cli/cmd"
+	"github.com/goodhosts/hostsfile"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
@@ -26,9 +28,10 @@ func main() {
 		},
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:  "custom, c",
-				Value: "",
-				Usage: "override the default hosts file",
+				Name:    "file",
+				Aliases: []string{"f"},
+				Value:   "",
+				Usage:   fmt.Sprintf("override the default hosts: %s", hostsfile.HostsFilePath),
 			},
 			&cli.BoolFlag{
 				Name:    "debug",

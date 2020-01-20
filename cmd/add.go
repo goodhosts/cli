@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"fmt"
 	"strings"
 
+	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
 
@@ -21,7 +21,7 @@ func add(c *cli.Context) error {
 	args := c.Args()
 
 	if args.Len() < 2 {
-		fmt.Println("Adding an entry requires an ip and a hostname.")
+		logrus.Infof("adding a hostsfile entry requires an ip and a hostname.")
 		return nil
 	}
 
@@ -47,11 +47,12 @@ func add(c *cli.Context) error {
 		return cli.NewExitError(err.Error(), 2)
 	}
 
+	logrus.Debugln("flushing hosts file to disk")
 	err = hostsfile.Flush()
 	if err != nil {
 		return cli.NewExitError(err.Error(), 2)
 	}
 
-	fmt.Printf("Added: %s %s\n", ip, strings.Join(hostEntries, " "))
-	return nil
+	logrus.Infof("hosts entry added: %s %s\n", ip, strings.Join(hostEntries, " "))
+	return debugFooter(c)
 }

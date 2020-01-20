@@ -5,9 +5,13 @@ interface for any OS or architecture, script and automate hosts file updates usi
 
 ## Features
 
-* List, add, remove and check hosts file entries from code or the command-line
-* Windows support
-* Custom hosts file support
+- List, add, remove and check hosts file entries from code or the command-line
+  - Remove by IP, Host, or IP/Host
+  - `check` returns proper exit codes for scripting e.g. `goodhosts check 10.0.5.12 || echo "Missing hosts entry for 10.0.5.12"`
+- linux/darwin/windows support
+- Custom hosts file support
+- Backup/Restore
+- Quick inline editor (vim/nano)
 
 ## Installation
 

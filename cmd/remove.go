@@ -5,7 +5,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/luthermonson/goodhosts/pkg/hostsfile"
+	"github.com/goodhosts/hostsfile"
 	"github.com/urfave/cli/v2"
 )
 

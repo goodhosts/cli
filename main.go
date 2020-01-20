@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/luthermonson/goodhosts/pkg/cmd"
+	"github.com/goodhosts/cli/cmd"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )

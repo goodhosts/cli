@@ -3,3 +3,5 @@ goodhosts
 goodhosts.exe
 .idea
 dist
+out
+release

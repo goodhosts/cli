@@ -8,6 +8,7 @@ import (
 	"github.com/goodhosts/cli/cmd"
 	"github.com/goodhosts/hostsfile"
 	"github.com/sirupsen/logrus"
+	easy "github.com/t-tomalak/logrus-easy-formatter"
 	"github.com/urfave/cli/v2"
 )
 
@@ -20,6 +21,11 @@ func main() {
 		Before: func(ctx *cli.Context) error {
 			if ctx.Bool("debug") {
 				logrus.SetLevel(logrus.DebugLevel)
+			} else {
+				// treat logrus like fmt.Print
+				logrus.SetFormatter(&easy.Formatter{
+					LogFormat: "%msg%",
+				})
 			}
 			if ctx.Bool("quiet") {
 				logrus.SetOutput(ioutil.Discard)

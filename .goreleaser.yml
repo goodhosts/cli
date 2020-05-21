@@ -1,6 +1,4 @@
-before:
-  hooks:
-    - go mod tidy
+project_name: goodhosts
 builds:
   - env:
       - GO111MODULE=on

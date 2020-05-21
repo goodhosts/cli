@@ -36,9 +36,9 @@ func list(c *cli.Context) error {
 			}
 		}
 
-		lineOutput := fmt.Sprintf("%s", line.Raw)
+		lineOutput := fmt.Sprintf("%s\n", line.Raw)
 		if line.IsMalformed() {
-			lineOutput = fmt.Sprintf("%s # <<< Malformed!", lineOutput)
+			lineOutput = fmt.Sprintf("%s # <<< Malformed!\n", lineOutput)
 		}
 
 		logrus.Infof(lineOutput)

@@ -23,28 +23,30 @@ architecture. Unzip and run in place, put in your system path (linux: `/usr/loca
 For full usage directions simply call `goodhosts -h`
 
 ```shell
-$ ./goodhosts -h
-   NAME:
-      goodhosts - manage your hosts file goodly
-   
-   USAGE:
-      goodhosts [global options] command [command options] [arguments...]
-   
-   COMMANDS:
-      check, c       Check if ip or host exists
-      list, ls       List all entries in the hostsfile
-      add, a         Add an entry to the hostsfile
-      remove, rm, r  Remove ip or host(s) if exists
-      debug, d       Show debug table for hosts file
-      backup         Backup hosts file
-      restore        Restore hosts file from backup
-      help, h        Shows a list of commands or help for one command
-   
-   GLOBAL OPTIONS:
-      --custom value  override the default hosts file
-      --debug, -d     Turn on verbose debug logging (default: false)
-      --quiet, -q     Turn on off all logging (default: false)
-      --help, -h      show help (default: false)
+$ goodhosts --help
+NAME:
+   goodhosts - manage your hosts file goodly
+
+USAGE:
+   goodhosts [global options] command [command options] [arguments...]
+
+COMMANDS:
+   check, c       Check if ip or host exists
+   list, ls       List all entries in the hostsfile
+   add, a         Add an entry to the hostsfile
+   remove, rm, r  Remove ip or host(s) if exists
+   debug, d       Show debug table for hosts file
+   backup         Backup hosts file
+   restore        Restore hosts file from backup
+   edit, e        Open hosts file in an editor, default vim
+   help, h        Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --file value, -f value  override the default hosts: /etc/hosts
+   --debug, -d             Turn on verbose debug logging (default: false)
+   --quiet, -q             Turn on off all logging (default: false)
+   --help, -h              show help (default: false)
+
 ```
 
 Each sub-command can be called with a `-h` option to see detailed help information.

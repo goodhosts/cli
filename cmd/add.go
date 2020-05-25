@@ -38,7 +38,7 @@ func add(c *cli.Context) error {
 		uniqueHosts[args.Slice()[i]] = true
 	}
 
-	for key, _ := range uniqueHosts {
+	for key := range uniqueHosts {
 		hostEntries = append(hostEntries, key)
 	}
 

@@ -40,7 +40,7 @@ func remove(c *cli.Context) error {
 		uniqueHosts[args.Slice()[i]] = true
 	}
 
-	for key, _ := range uniqueHosts {
+	for key := range uniqueHosts {
 		hostEntries = append(hostEntries, key)
 	}
 
@@ -54,7 +54,9 @@ func remove(c *cli.Context) error {
 	} else {
 		hostEntries = append(hostEntries, args.Slice()[0])
 		for _, value := range hostEntries {
-			hostsfile.RemoveByHostname(value)
+			if err := hostsfile.RemoveByHostname(value); err != nil {
+				return err
+			}
 		}
 	}
 

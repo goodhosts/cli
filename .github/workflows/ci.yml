@@ -1,0 +1,27 @@
+name: Continous Integration
+on: [push, pull_request]
+
+jobs:
+  ci:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.14
+        id: go
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run goimports
+        run: |
+          go get golang.org/x/tools/cmd/goimports
+          output="$($(go env GOPATH)/bin/goimports -l .)"
+          test -z $output && exit 0
+          $(go env GOPATH)/bin/goimports -d .
+          exit 1
+      - name: Lint
+        env:
+          GOROOT: ""
+        uses: actions-contrib/golangci-lint@v1
+      - name: Test
+        run: go test -v .

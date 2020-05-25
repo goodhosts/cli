@@ -1,7 +1,7 @@
 .DS_Store
-goodhosts
-goodhosts.exe
-.idea
-dist
-out
-release
+/goodhosts
+/goodhosts.exe
+/.idea
+/dist
+/out
+/release

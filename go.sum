@@ -80,8 +80,8 @@ github.com/golangci/misspell v0.0.0-20180809174111-950f5d19e770/go.mod h1:dEbvlS
 github.com/golangci/prealloc v0.0.0-20180630174525-215b22d4de21/go.mod h1:tf5+bzsHdTM0bsB7+8mt0GUMvjCgwLpTapNZHU8AajI=
 github.com/golangci/revgrep v0.0.0-20180526074752-d9c87f5ffaf0/go.mod h1:qOQCunEYvmd/TLamH+7LlVccLvUH5kZNhbCgTHoBbp4=
 github.com/golangci/unconvert v0.0.0-20180507085042-28b1c447d1f4/go.mod h1:Izgrg8RkN3rCIMLGE9CyYmU9pY2Jer6DgANEnZ/L/cQ=
-github.com/goodhosts/hostsfile v0.0.3 h1:S6P1hUnDVpCg1nh8/ofV43BMqyhGxZ69QMimAnEdfkg=
-github.com/goodhosts/hostsfile v0.0.3/go.mod h1:OKlLqxndYuEVzlq3ZNqFZJQYQOVFMxygiojAfP2k26Y=
+github.com/goodhosts/hostsfile v0.0.4 h1:zBq0Ebfz9rvLIF4OPSvOBZv0ybOGLMsypZrk72Lo+48=
+github.com/goodhosts/hostsfile v0.0.4/go.mod h1:OKlLqxndYuEVzlq3ZNqFZJQYQOVFMxygiojAfP2k26Y=
 github.com/google/btree v1.0.0/go.mod h1:lNA+9X1NB3Zf8V7Ke586lFgjr2dZNuvo3lPJSGZ5JPQ=
 github.com/google/go-cmp v0.2.0/go.mod h1:oXzfMopK8JAjlY9xF4vHSVASa0yLyX7SntLO5aqRK0M=
 github.com/google/renameio v0.1.0/go.mod h1:KWCgfxg9yswjAJkECMjeO8J8rahYeXnNhOm40UhjYkI=

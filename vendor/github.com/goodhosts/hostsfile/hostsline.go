@@ -47,6 +47,10 @@ func NewHostsLine(raw string) HostsLine {
 
 func (l *HostsLine) ToRaw() string {
 	var comment string
+	if l.IsComment() { //Whole line is comment
+		return l.Raw
+	}
+
 	if l.Comment != "" {
 		comment = fmt.Sprintf(" %s%s", commentChar, l.Comment)
 	}

@@ -1,9 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
-	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
 
@@ -29,20 +26,6 @@ func list(c *cli.Context) error {
 		return err
 	}
 
-	for _, line := range hostsfile.Lines {
-		if !c.Bool("all") {
-			if line.IsComment() || line.Raw == "" {
-				continue
-			}
-		}
-
-		lineOutput := fmt.Sprintf("%s\n", line.Raw)
-		if line.IsMalformed() {
-			lineOutput = fmt.Sprintf("%s # <<< Malformed!\n", lineOutput)
-		}
-
-		logrus.Infof(lineOutput)
-	}
-
+	outputHostsfile(hostsfile, c.Bool("all"))
 	return debugFooter(c)
 }

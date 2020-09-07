@@ -25,6 +25,7 @@ func Commands() []*cli.Command {
 		Backup(),
 		Restore(),
 		Edit(),
+		Clean(),
 	}
 }
 
@@ -54,6 +55,23 @@ func loadHostsfile(c *cli.Context) (hostsfile.Hosts, error) {
 	}
 
 	return hfile, nil
+}
+
+func outputHostsfile(hf hostsfile.Hosts, all bool) {
+	for _, line := range hf.Lines {
+		if !all {
+			if line.IsComment() || line.Raw == "" {
+				continue
+			}
+		}
+
+		lineOutput := fmt.Sprintf("%s\n", line.Raw)
+		if line.IsMalformed() {
+			lineOutput = fmt.Sprintf("%s # <<< Malformed!\n", lineOutput)
+		}
+
+		logrus.Infof(lineOutput)
+	}
 }
 
 func debugFooter(c *cli.Context) error {

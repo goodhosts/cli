@@ -2,7 +2,7 @@
 github.com/cpuguy83/go-md2man/v2/md2man
 # github.com/dimchansky/utfbom v1.1.0
 github.com/dimchansky/utfbom
-# github.com/goodhosts/hostsfile v0.0.4
+# github.com/goodhosts/hostsfile v0.0.5
 github.com/goodhosts/hostsfile
 # github.com/konsorten/go-windows-terminal-sequences v1.0.1
 github.com/konsorten/go-windows-terminal-sequences
@@ -20,5 +20,5 @@ github.com/sirupsen/logrus
 github.com/t-tomalak/logrus-easy-formatter
 # github.com/urfave/cli/v2 v2.1.1
 github.com/urfave/cli/v2
-# golang.org/x/sys v0.0.0-20191120155948-bd437916bb0e
+# golang.org/x/sys v0.0.0-20190422165155-953cdadca894
 golang.org/x/sys/unix

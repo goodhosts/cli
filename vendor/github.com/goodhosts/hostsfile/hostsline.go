@@ -3,6 +3,7 @@ package hostsfile
 import (
 	"fmt"
 	"net"
+	"sort"
 	"strings"
 )
 
@@ -56,6 +57,30 @@ func (l *HostsLine) ToRaw() string {
 	}
 
 	return fmt.Sprintf("%s %s%s", l.IP, strings.Join(l.Hosts, " "), comment)
+}
+
+func (l *HostsLine) RemoveDuplicateHosts() {
+	unique := make(map[string]struct{})
+	for _, h := range l.Hosts {
+		unique[h] = struct{}{}
+	}
+
+	l.Hosts = []string{}
+	for k := range unique {
+		l.Hosts = append(l.Hosts, k)
+	}
+	l.Raw = l.ToRaw()
+}
+
+func (l *HostsLine) Combine(hostline HostsLine) {
+	l.Hosts = append(l.Hosts, hostline.Hosts...)
+	l.Comment = fmt.Sprintf("%s, %s", l.Comment, hostline.Comment)
+	l.Raw = l.ToRaw()
+}
+
+func (l *HostsLine) SortHosts() {
+	sort.Strings(l.Hosts)
+	l.Raw = l.ToRaw()
 }
 
 func (l *HostsLine) IsComment() bool {

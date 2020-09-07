@@ -49,8 +49,6 @@ func (h *Hosts) IsWritable() bool {
 // ```Load()``` is called by ```NewHosts()``` and ```Hosts.Flush()``` so you
 // generally you won't need to call this yourself.
 func (h *Hosts) Load() error {
-	var lines []HostsLine
-
 	file, err := os.Open(h.Path)
 	if err != nil {
 		return err
@@ -59,14 +57,12 @@ func (h *Hosts) Load() error {
 
 	scanner := bufio.NewScanner(utfbom.SkipOnly(file))
 	for scanner.Scan() {
-		lines = append(lines, NewHostsLine(scanner.Text()))
+		h.Lines = append(h.Lines, NewHostsLine(scanner.Text()))
 	}
 
 	if err := scanner.Err(); err != nil {
 		return err
 	}
-
-	h.Lines = lines
 
 	return nil
 }
@@ -127,6 +123,16 @@ func (h *Hosts) Add(ip string, hosts ...string) error {
 	return nil
 }
 
+// merge dupelicate ips and hosts per ip
+func (h *Hosts) Clean() {
+	h.RemoveDuplicateIps()
+	for pos, line := range h.Lines {
+		line.RemoveDuplicateHosts()
+		line.SortHosts()
+		h.Lines[pos] = line
+	}
+}
+
 // Return a bool if ip/host combo in hosts file.
 func (h Hosts) Has(ip string, host string) bool {
 	return h.getHostPosition(ip, host) != -1
@@ -144,13 +150,11 @@ func (h Hosts) HasIp(ip string) bool {
 // Remove an entry from the hosts file.
 func (h *Hosts) Remove(ip string, hosts ...string) error {
 	var outputLines []HostsLine
-
 	if net.ParseIP(ip) == nil {
 		return fmt.Errorf("%q is an invalid IP address", ip)
 	}
 
 	for _, line := range h.Lines {
-
 		// Bad lines or comments just get readded.
 		if line.Err != nil || line.IsComment() || line.IP != ip {
 			outputLines = append(outputLines, line)
@@ -206,6 +210,31 @@ func (h *Hosts) RemoveByIp(ip string) error {
 	return nil
 }
 
+func (h *Hosts) RemoveDuplicateIps() {
+	ipCount := make(map[string]int)
+	for _, line := range h.Lines {
+		ipCount[line.IP]++
+	}
+	for ip, count := range ipCount {
+		if count > 1 {
+			h.combineIp(ip)
+		}
+	}
+}
+
+func (h *Hosts) combineIp(ip string) {
+	first := h.getIpPosition(ip)
+	firstline := &h.Lines[first]
+	for i := first + 1; i < len(h.Lines); i++ {
+		if h.Lines[i].IP == ip {
+			firstline.Combine(h.Lines[i])
+			h.removeByPosition(i)
+		}
+	}
+	firstline.SortHosts()
+	h.Lines[first] = *firstline
+}
+
 func (h *Hosts) removeByPosition(pos int) {
 	h.Lines[pos] = h.Lines[len(h.Lines)-1]
 	h.Lines = h.Lines[:len(h.Lines)-1]
@@ -240,10 +269,8 @@ func (h Hosts) getHostnamePosition(host string) int {
 func (h Hosts) getIpPosition(ip string) int {
 	for i := range h.Lines {
 		line := h.Lines[i]
-		if !line.IsComment() && line.Raw != "" {
-			if line.IP == ip {
-				return i
-			}
+		if !line.IsComment() && line.Raw != "" && line.IP == ip {
+			return i
 		}
 	}
 

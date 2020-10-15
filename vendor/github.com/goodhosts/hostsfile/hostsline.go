@@ -74,7 +74,11 @@ func (l *HostsLine) RemoveDuplicateHosts() {
 
 func (l *HostsLine) Combine(hostline HostsLine) {
 	l.Hosts = append(l.Hosts, hostline.Hosts...)
-	l.Comment = fmt.Sprintf("%s, %s", l.Comment, hostline.Comment)
+	if l.Comment == "" {
+		l.Comment = hostline.Comment
+	} else {
+		l.Comment = fmt.Sprintf("%s %s", l.Comment, hostline.Comment)
+	}
 	l.Raw = l.ToRaw()
 }
 

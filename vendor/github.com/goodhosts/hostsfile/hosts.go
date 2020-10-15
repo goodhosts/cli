@@ -2,10 +2,12 @@ package hostsfile
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"net"
 	"os"
 	"path/filepath"
+	"sort"
 
 	"github.com/dimchansky/utfbom"
 )
@@ -131,6 +133,8 @@ func (h *Hosts) Clean() {
 		line.SortHosts()
 		h.Lines[pos] = line
 	}
+	h.SortByIp()
+	h.HostsPerLine(HostsPerLine)
 }
 
 // Return a bool if ip/host combo in hosts file.
@@ -222,22 +226,75 @@ func (h *Hosts) RemoveDuplicateIps() {
 	}
 }
 
+// convert to net.IP and byte.Compare
+func (h *Hosts) SortByIp() {
+	sortedIps := make([]net.IP, 0, len(h.Lines))
+	for _, l := range h.Lines {
+		sortedIps = append(sortedIps, net.ParseIP(l.IP))
+	}
+	sort.Slice(sortedIps, func(i, j int) bool {
+		return bytes.Compare(sortedIps[i], sortedIps[j]) < 0
+	})
+
+	var sortedLines []HostsLine
+	for _, ip := range sortedIps {
+		for _, l := range h.Lines {
+			if ip.String() == l.IP {
+				sortedLines = append(sortedLines, l)
+			}
+		}
+	}
+	h.Lines = sortedLines
+}
+
+func (h *Hosts) HostsPerLine(count int) {
+	if count <= 0 {
+		return
+	}
+	var newLines []HostsLine
+	for _, line := range h.Lines {
+		if len(line.Hosts) <= count {
+			newLines = append(newLines, line)
+			continue
+		}
+
+		for i := 0; i < len(line.Hosts); i += count {
+			lineCopy := line
+			end := len(line.Hosts)
+			if end > i+count {
+				end = i + count
+			}
+			lineCopy.Hosts = line.Hosts[i:end]
+			lineCopy.Raw = lineCopy.ToRaw()
+			newLines = append(newLines, lineCopy)
+		}
+	}
+	h.Lines = newLines
+}
+
 func (h *Hosts) combineIp(ip string) {
-	first := h.getIpPosition(ip)
-	firstline := &h.Lines[first]
-	for i := first + 1; i < len(h.Lines); i++ {
-		if h.Lines[i].IP == ip {
-			firstline.Combine(h.Lines[i])
+	newLine := HostsLine{
+		IP: ip,
+	}
+
+	linesCopy := make([]HostsLine, len(h.Lines))
+	copy(linesCopy, h.Lines)
+	for i, line := range linesCopy {
+		if line.IP == ip {
+			newLine.Combine(line)
 			h.removeByPosition(i)
 		}
 	}
-	firstline.SortHosts()
-	h.Lines[first] = *firstline
+	newLine.SortHosts()
+	h.Lines = append(h.Lines, newLine)
 }
 
 func (h *Hosts) removeByPosition(pos int) {
-	h.Lines[pos] = h.Lines[len(h.Lines)-1]
-	h.Lines = h.Lines[:len(h.Lines)-1]
+	if len(h.Lines) == 1 {
+		h.Lines = []HostsLine{}
+		return
+	}
+	h.Lines = append(h.Lines[:pos], h.Lines[pos+1:]...)
 }
 
 func (h Hosts) getHostPosition(ip string, host string) int {

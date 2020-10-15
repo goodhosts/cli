@@ -14,6 +14,17 @@ func Add() *cli.Command {
 		Usage:     "Add an entry to the hostsfile",
 		Action:    add,
 		ArgsUsage: "[IP] [HOST] ([HOST]...)",
+		Flags: []cli.Flag{
+			&cli.BoolFlag{
+				Name:    "clean",
+				Aliases: []string{"c"},
+				Usage:   "Clean the hostsfile after adding an entry. See clean command for more details",
+			},
+			&cli.BoolFlag{
+				Name:  "dry-run",
+				Usage: "Dry run only, will output contents of the new hostsfile without writing the changes.",
+			},
+		},
 	}
 }
 func add(c *cli.Context) error {
@@ -47,9 +58,18 @@ func add(c *cli.Context) error {
 		return cli.NewExitError(err.Error(), 2)
 	}
 
+	if c.Bool("clean") {
+		hostsfile.Clean()
+	}
+
+	if c.Bool("dry-run") {
+		logrus.Debugln("performing a dry run, writing output")
+		outputHostsfile(hostsfile, true)
+		return debugFooter(c)
+	}
+
 	logrus.Debugln("flushing hosts file to disk")
-	err = hostsfile.Flush()
-	if err != nil {
+	if err := hostsfile.Flush(); err != nil {
 		return cli.NewExitError(err.Error(), 2)
 	}
 

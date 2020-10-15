@@ -16,6 +16,17 @@ func Remove() *cli.Command {
 		Usage:     "Remove ip or host(s) if exists",
 		Action:    remove,
 		ArgsUsage: "[IP|HOST] or [IP] [HOST] ([HOST]...)",
+		Flags: []cli.Flag{
+			&cli.BoolFlag{
+				Name:    "clean",
+				Aliases: []string{"c"},
+				Usage:   "Clean the hostsfile after adding an entry. See clean command for more details",
+			},
+			&cli.BoolFlag{
+				Name:  "dry-run",
+				Usage: "Dry run only, will output contents of the new hostsfile without writing the changes.",
+			},
+		},
 	}
 }
 func remove(c *cli.Context) error {
@@ -60,8 +71,18 @@ func remove(c *cli.Context) error {
 		}
 	}
 
-	err = hostsfile.Flush()
-	if err != nil {
+	if c.Bool("clean") {
+		hostsfile.Clean()
+	}
+
+	if c.Bool("dry-run") {
+		logrus.Debugln("performing a dry run, writing output")
+		outputHostsfile(hostsfile, true)
+		return debugFooter(c)
+	}
+
+	logrus.Debugln("flushing hosts file to disk")
+	if err := hostsfile.Flush(); err != nil {
 		return cli.NewExitError(err.Error(), 2)
 	}
 

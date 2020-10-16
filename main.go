@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -12,6 +13,8 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+var version = "dev"
+
 func main() {
 	app := &cli.App{
 		Name:     "goodhosts",
@@ -19,6 +22,7 @@ func main() {
 		Action:   cmd.DefaultAction,
 		Commands: cmd.Commands(),
 		Before: func(ctx *cli.Context) error {
+			ctx.Context = context.WithValue(ctx.Context, "version", version)
 			if ctx.Bool("debug") {
 				logrus.SetLevel(logrus.DebugLevel)
 			} else {

@@ -17,15 +17,16 @@ func Run(c *cli.Context) error {
 
 func Commands() []*cli.Command {
 	return []*cli.Command{
-		Check(),
-		List(),
 		Add(),
-		Remove(),
-		Debug(),
 		Backup(),
-		Restore(),
-		Edit(),
+		Check(),
 		Clean(),
+		Debug(),
+		Edit(),
+		List(),
+		Remove(),
+		Restore(),
+		Version(),
 	}
 }
 

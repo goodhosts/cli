@@ -2,7 +2,7 @@
 github.com/cpuguy83/go-md2man/v2/md2man
 # github.com/dimchansky/utfbom v1.1.0
 github.com/dimchansky/utfbom
-# github.com/goodhosts/hostsfile v0.0.6
+# github.com/goodhosts/hostsfile v0.0.7
 github.com/goodhosts/hostsfile
 # github.com/konsorten/go-windows-terminal-sequences v1.0.1
 github.com/konsorten/go-windows-terminal-sequences

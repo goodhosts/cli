@@ -279,13 +279,13 @@ func (h *Hosts) combineIp(ip string) {
 
 	linesCopy := make([]HostsLine, len(h.Lines))
 	copy(linesCopy, h.Lines)
-	for i, line := range linesCopy {
+	for _, line := range linesCopy {
 		if line.IP == ip {
 			newLine.Combine(line)
-			h.removeByPosition(i)
 		}
 	}
 	newLine.SortHosts()
+	h.removeIp(ip)
 	h.Lines = append(h.Lines, newLine)
 }
 
@@ -294,7 +294,22 @@ func (h *Hosts) removeByPosition(pos int) {
 		h.Lines = []HostsLine{}
 		return
 	}
+	if pos == len(h.Lines) {
+		h.Lines = h.Lines[:pos-1]
+		return
+	}
 	h.Lines = append(h.Lines[:pos], h.Lines[pos+1:]...)
+}
+
+func (h *Hosts) removeIp(ip string) {
+	var newLines []HostsLine
+	for _, line := range h.Lines {
+		if line.IP != ip {
+			newLines = append(newLines, line)
+		}
+	}
+
+	h.Lines = newLines
 }
 
 func (h Hosts) getHostPosition(ip string, host string) int {

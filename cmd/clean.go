@@ -8,7 +8,7 @@ import (
 func Clean() *cli.Command {
 	return &cli.Command{
 		Name:    "clean",
-		Aliases: []string{"c"},
+		Aliases: []string{"cl"},
 		Usage:   "Clean the hostsfile by doing: remove dupe IPs, for each IPs remove dupe hosts and sort, sort all IPs, split hosts per OS limitations",
 		Action:  clean,
 		Flags: []cli.Flag{

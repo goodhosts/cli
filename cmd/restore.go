@@ -23,7 +23,7 @@ func Restore() *cli.Command {
 }
 
 func restore(c *cli.Context) error {
-	hostsfile, err := loadHostsfile(c)
+	hostsfile, err := loadHostsfile(c, false)
 	if err != nil {
 		// debug only, no problem if file doesn't exist we just need path
 		logrus.Debugf("destination hosts file not found: %s", hostsfile.Path)

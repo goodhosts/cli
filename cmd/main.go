@@ -34,7 +34,7 @@ func DefaultAction(c *cli.Context) error {
 	return list(c)
 }
 
-func loadHostsfile(c *cli.Context) (hostsfile.Hosts, error) {
+func loadHostsfile(c *cli.Context, readOnly bool) (hostsfile.Hosts, error) {
 	customHostsfile := c.String("file")
 	var hfile hostsfile.Hosts
 	var err error
@@ -51,7 +51,7 @@ func loadHostsfile(c *cli.Context) (hostsfile.Hosts, error) {
 		return hfile, cli.NewExitError(err, 1)
 	}
 
-	if !hfile.IsWritable() {
+	if !readOnly && !hfile.IsWritable() {
 		return hfile, cli.NewExitError("Host file not writable. Try running with elevated privileges.", 1)
 	}
 
@@ -80,7 +80,7 @@ func debugFooter(c *cli.Context) error {
 		return nil
 	}
 
-	hostsfile, err := loadHostsfile(c)
+	hostsfile, err := loadHostsfile(c, true)
 	if err != nil {
 		return err
 	}

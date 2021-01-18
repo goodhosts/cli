@@ -29,9 +29,10 @@ func Remove() *cli.Command {
 		},
 	}
 }
+
 func remove(c *cli.Context) error {
 	args := c.Args()
-	hostsfile, err := loadHostsfile(c)
+	hostsfile, err := loadHostsfile(c, false)
 	if err != nil {
 		return err
 	}

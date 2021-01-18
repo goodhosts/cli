@@ -23,7 +23,7 @@ func Backup() *cli.Command {
 }
 
 func backup(c *cli.Context) error {
-	hostsfile, err := loadHostsfile(c)
+	hostsfile, err := loadHostsfile(c, false)
 	if err != nil {
 		return err
 	}

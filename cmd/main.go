@@ -80,7 +80,7 @@ func debugFooter(c *cli.Context) error {
 		return nil
 	}
 
-	hostsfile, err := loadHostsfile(c)
+	hostsfile, err := loadHostsfile(c, true)
 	if err != nil {
 		return err
 	}

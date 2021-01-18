@@ -21,7 +21,7 @@ func Clean() *cli.Command {
 }
 
 func clean(c *cli.Context) error {
-	hostsfile, err := loadHostsfile(c)
+	hostsfile, err := loadHostsfile(c, false)
 	if err != nil {
 		return err
 	}

@@ -11,7 +11,7 @@ interface for any OS or architecture, script and automate hosts file updates usi
 - Clean hostsfile command will
  - Consolidate duplicate IPs
  - Remove duplicate hosts
- - Alpha sort Hosts 
+ - Alpha sort Hosts
  - Sort IPs
  - Help with OS limitations, e.g. 9 hosts per IP line in windows
 - linux/darwin/windows support
@@ -21,7 +21,7 @@ interface for any OS or architecture, script and automate hosts file updates usi
 
 ## Installation
 
-Visit the [releases](https://github.com/goodhosts/cli/releases/) page and download the proper binary for your 
+Visit the [releases](https://github.com/goodhosts/cli/releases/) page and download the proper binary for your
 architecture. Unzip and run in place, put in your system path (linux: `/usr/local/bin` win: `~/bin`) for easier access.
 
 ## Usage
@@ -32,10 +32,10 @@ For full usage directions simply call `goodhosts -h`
 $ goodhosts -h
   NAME:
      goodhosts - manage your hosts file goodly
-  
+
   USAGE:
      goodhosts [global options] command [command options] [arguments...]
-  
+
   COMMANDS:
      check, c       Check if ip or host exists
      list, ls       List all entries in the hostsfile
@@ -47,7 +47,7 @@ $ goodhosts -h
      edit, e        Open hosts file in an editor, default vim
      clean, c       Clean the hostsfile by doing: remove dupe IPs, for each IPs remove dupe hosts and sort, sort all IPs, split hosts per OS limitations
      help, h        Shows a list of commands or help for one command
-  
+
   GLOBAL OPTIONS:
      --file value, -f value  override the default hosts: ${SystemRoot}/System32/drivers/etc/hosts
      --debug, -d             Turn on verbose debug logging (default: false)
@@ -62,10 +62,10 @@ Each sub-command can be called with a `-h` option to see detailed help informati
  $ ./goodhosts list -h
  NAME:
     goodhosts list - List all entries in the hostsfile
- 
+
  USAGE:
     goodhosts list [command options] [arguments...]
- 
+
  OPTIONS:
     --all       Show all entries in the hosts file including commented lines. (default: false)
     --help, -h  show help (default: false)

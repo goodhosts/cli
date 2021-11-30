@@ -22,7 +22,7 @@ func main() {
 		Action:   cmd.DefaultAction,
 		Commands: cmd.Commands(),
 		Before: func(ctx *cli.Context) error {
-			ctx.Context = context.WithValue(ctx.Context, "version", version)
+			ctx.Context = context.WithValue(ctx.Context, cmd.VersionKey("version"), version)
 			if ctx.Bool("debug") {
 				logrus.SetLevel(logrus.DebugLevel)
 			} else {

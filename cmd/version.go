@@ -5,6 +5,8 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+type VersionKey string
+
 func Version() *cli.Command {
 	return &cli.Command{
 		Name:   "version",
@@ -14,6 +16,6 @@ func Version() *cli.Command {
 }
 
 func version(c *cli.Context) error {
-	logrus.Infof("goodhosts %s", c.Context.Value("version"))
+	logrus.Infof("goodhosts %s", c.Context.Value(VersionKey("version")))
 	return nil
 }

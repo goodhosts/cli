@@ -1,14 +1,25 @@
 project_name: goodhosts
 builds:
   - env:
-      - GO111MODULE=on
       - CGO_ENABLED=0
     goos:
-      - linux
       - darwin
       - windows
+      - linux
+      - freebsd
     goarch:
       - amd64
+      - arm64
+      - arm
+      - 386
+      - ppc64le
+      - s390x
+      - mips64
+      - mips64le
+      - riscv64
+    goarm:
+      - 6
+      - 7
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}'
 checksum:

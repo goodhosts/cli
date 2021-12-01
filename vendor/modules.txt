@@ -1,11 +1,14 @@
+# github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
+## explicit; go 1.13
+github.com/asaskevich/govalidator
 # github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d
 ## explicit; go 1.12
 github.com/cpuguy83/go-md2man/v2/md2man
-# github.com/dimchansky/utfbom v1.1.0
+# github.com/dimchansky/utfbom v1.1.1
 ## explicit
 github.com/dimchansky/utfbom
-# github.com/goodhosts/hostsfile v0.0.7
-## explicit; go 1.13
+# github.com/goodhosts/hostsfile v0.0.10
+## explicit; go 1.17
 github.com/goodhosts/hostsfile
 # github.com/konsorten/go-windows-terminal-sequences v1.0.1
 ## explicit

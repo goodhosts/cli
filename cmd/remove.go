@@ -91,7 +91,7 @@ func remove(c *cli.Context) error {
 	return debugFooter(c)
 }
 
-func processSingleArg(hostsfile hostsfile.Hosts, arg string) error {
+func processSingleArg(hostsfile *hostsfile.Hosts, arg string) error {
 	if net.ParseIP(arg) != nil {
 		logrus.Infof("removing ip %s\n", arg)
 		if err := hostsfile.RemoveByIp(arg); err != nil {

@@ -34,9 +34,9 @@ func DefaultAction(c *cli.Context) error {
 	return list(c)
 }
 
-func loadHostsfile(c *cli.Context, readOnly bool) (hostsfile.Hosts, error) {
+func loadHostsfile(c *cli.Context, readOnly bool) (*hostsfile.Hosts, error) {
 	customHostsfile := c.String("file")
-	var hfile hostsfile.Hosts
+	var hfile *hostsfile.Hosts
 	var err error
 
 	if customHostsfile != "" {
@@ -58,7 +58,7 @@ func loadHostsfile(c *cli.Context, readOnly bool) (hostsfile.Hosts, error) {
 	return hfile, nil
 }
 
-func outputHostsfile(hf hostsfile.Hosts, all bool) {
+func outputHostsfile(hf *hostsfile.Hosts, all bool) {
 	for _, line := range hf.Lines {
 		if !all {
 			if line.IsComment() || line.Raw == "" {

@@ -45,7 +45,7 @@ $ goodhosts -h
      backup         Backup hosts file
      restore        Restore hosts file from backup
      edit, e        Open hosts file in an editor, default vim
-     clean, c       Clean the hostsfile by doing: remove dupe IPs, for each IPs remove dupe hosts and sort, sort all IPs, split hosts per OS limitations
+     clean, cl      Clean the hostsfile by doing: remove dupe IPs, for each IPs remove dupe hosts and sort, sort all IPs, split hosts per OS limitations
      help, h        Shows a list of commands or help for one command
 
   GLOBAL OPTIONS:

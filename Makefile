@@ -1,47 +1,31 @@
 # Go and compilation related variables
-BUILD_DIR ?= out
-
+BUILD_DIR ?= dist
 BINARY_NAME := goodhosts
-RELEASE_DIR ?= release
-
-# Add default target
-.PHONY: all
-all: build
-
-vendor:
-	go mod vendor
+GOLANGCI_LINT_VERSION ?= v1.54.2
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
-.PHONY: clean
 clean:
 	rm -rf $(BUILD_DIR)
-	rm -rf vendor
-	rm -fr release
 
-$(BUILD_DIR)/macos-amd64/$(BINARY_NAME):
-	GOARCH=amd64 GOOS=darwin go build -o $(BUILD_DIR)/macos-amd64/$(BINARY_NAME) ./main.go
+golangci-lint:
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s $(GOLANGCI_LINT_VERSIONM)
 
-$(BUILD_DIR)/linux-amd64/$(BINARY_NAME):
-	GOOS=linux GOARCH=amd64 go build -o $(BUILD_DIR)/linux-amd64/$(BINARY_NAME) ./main.go
+goimports:
+	go install golang.org/x/tools/cmd/goimports@latest
 
-$(BUILD_DIR)/windows-amd64/$(BINARY_NAME).exe:
-	GOARCH=amd64 GOOS=windows go build -o $(BUILD_DIR)/windows-amd64/$(BINARY_NAME).exe ./main.go
+goreleaser:
+	go install github.com/goreleaser/goreleaser@latest
 
-.PHONY: cross ## Cross compiles all binaries
-cross: $(BUILD_DIR)/macos-amd64/$(BINARY_NAME) $(BUILD_DIR)/linux-amd64/$(BINARY_NAME) $(BUILD_DIR)/windows-amd64/$(BINARY_NAME).exe
+release:
+	goreleaser release
 
-.PHONY: release
-release: clean cross
-	mkdir $(RELEASE_DIR)
-	tar cJSf $(RELEASE_DIR)/goodhosts-cli-macos-amd64.tar.xz -C $(BUILD_DIR)/macos-amd64 $(BINARY_NAME)
-	tar cJSf $(RELEASE_DIR)/goodhosts-cli-linux-amd64.tar.xz -C $(BUILD_DIR)/linux-amd64 $(BINARY_NAME)
-	tar cJSf $(RELEASE_DIR)/goodhosts-cli-windows-amd64.tar.xz -C $(BUILD_DIR)/windows-amd64 $(BINARY_NAME).exe
+ci: goimports golangci-lint
+	goimports -d .
+	golangci-lint run
+	go test -v ./...
 
-	pushd $(RELEASE_DIR) && sha256sum * > sha256sum.txt && popd
-
-.PHONY: build
 build:
 	go build -o $(BINARY_NAME) ./main.go
 

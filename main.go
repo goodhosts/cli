@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 
 	"github.com/goodhosts/cli/cmd"
@@ -32,7 +32,7 @@ func main() {
 				})
 			}
 			if ctx.Bool("quiet") {
-				logrus.SetOutput(ioutil.Discard)
+				logrus.SetOutput(io.Discard)
 			}
 			return nil
 		},

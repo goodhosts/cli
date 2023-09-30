@@ -1,5 +1,8 @@
 # goodhosts cli, fork of Lex Toumbourou's project [goodhosts](https://github.com/lextoumbourou/goodhosts)
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/goodhosts/cli.svg)](https://pkg.go.dev/github.com/goodhosts/cli)
+[![Go Report Card](https://goreportcard.com/badge/github.com/goodhosts/cli)](https://goreportcard.com/report/github.com/goodhosts/cli)
+
 Simple [hosts file](http://en.wikipedia.org/wiki/Hosts_%28file%29) (```/etc/hosts```) management in a Go cli. One simple
 interface for any OS or architecture, script and automate hosts file updates using one simple tool.
 
@@ -31,29 +34,29 @@ For full usage directions simply call `goodhosts -h`
 ```shell
 $ goodhosts -h
   NAME:
-     goodhosts - manage your hosts file goodly
+    goodhosts - manage your hosts file goodly
 
   USAGE:
-     goodhosts [global options] command [command options] [arguments...]
-
+     main.exe [global options] command [command options] [arguments...]
+  
   COMMANDS:
-     check, c       Check if ip or host exists
-     list, ls       List all entries in the hostsfile
      add, a         Add an entry to the hostsfile
-     remove, rm, r  Remove ip or host(s) if exists
-     debug, d       Show debug table for hosts file
      backup         Backup hosts file
-     restore        Restore hosts file from backup
-     edit, e        Open hosts file in an editor, default vim
+     check, c       Check if ip or host exists
      clean, cl      Clean the hostsfile by doing: remove dupe IPs, for each IPs remove dupe hosts and sort, sort all IPs, split hosts per OS limitations
+     debug, d       Show debug table for hosts file
+     edit, e        Open hosts file in an editor, default vim
+     list, ls       List all entries in the hostsfile
+     remove, rm, r  Remove ip or host(s) if exists
+     restore        Restore hosts file from backup
+     version
      help, h        Shows a list of commands or help for one command
-
+  
   GLOBAL OPTIONS:
      --file value, -f value  override the default hosts: ${SystemRoot}/System32/drivers/etc/hosts
      --debug, -d             Turn on verbose debug logging (default: false)
      --quiet, -q             Turn on off all logging (default: false)
      --help, -h              show help (default: false)
-
 ```
 
 Each sub-command can be called with a `-h` option to see detailed help information.

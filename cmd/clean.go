@@ -88,7 +88,7 @@ func clean(c *cli.Context) error {
 	}
 
 	if err := h.Flush(); err != nil {
-		return cli.NewExitError(err.Error(), 2)
+		return cli.Exit(err.Error(), 2)
 	}
 	return debugFooter(c)
 }

@@ -41,5 +41,5 @@ func check(c *cli.Context) error {
 		return nil
 	}
 
-	return cli.NewExitError(fmt.Sprintf("%s does not match anything in the hosts file", input), 1)
+	return cli.Exit(fmt.Sprintf("%s does not match anything in the hosts file", input), 1)
 }

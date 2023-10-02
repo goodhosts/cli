@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"os"
@@ -13,16 +12,19 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-var version = "dev"
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
 
 func main() {
 	app := &cli.App{
 		Name:     "goodhosts",
 		Usage:    "manage your hosts file goodly",
 		Action:   cmd.DefaultAction,
-		Commands: cmd.Commands(),
+		Commands: append(cmd.Commands(), Version()),
 		Before: func(ctx *cli.Context) error {
-			ctx.Context = context.WithValue(ctx.Context, cmd.VersionKey("version"), version)
 			if ctx.Bool("debug") {
 				logrus.SetLevel(logrus.DebugLevel)
 			} else {
@@ -59,5 +61,17 @@ func main() {
 	err := app.Run(os.Args)
 	if err != nil {
 		logrus.Fatal(err)
+	}
+}
+
+func Version() *cli.Command {
+	return &cli.Command{
+		Name:    "version",
+		Usage:   "",
+		Aliases: []string{"v", "ver"},
+		Action: func(c *cli.Context) error {
+			logrus.Infof("goodhosts %s@%s built on %s", version, commit, date)
+			return nil
+		},
 	}
 }

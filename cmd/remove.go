@@ -38,7 +38,7 @@ func remove(c *cli.Context) error {
 	}
 
 	if args.Len() == 0 {
-		return cli.NewExitError("no input", 1)
+		return cli.Exit("no input", 1)
 	}
 
 	if args.Len() == 1 { //could be ip or hostname
@@ -60,7 +60,7 @@ func remove(c *cli.Context) error {
 		if hostsfile.HasIp(args.Slice()[0]) {
 			err = hostsfile.Remove(args.Slice()[0], hostEntries...)
 			if err != nil {
-				return cli.NewExitError(err.Error(), 2)
+				return cli.Exit(err.Error(), 2)
 			}
 		}
 	} else {
@@ -84,7 +84,7 @@ func remove(c *cli.Context) error {
 
 	logrus.Debugln("flushing hosts file to disk")
 	if err := hostsfile.Flush(); err != nil {
-		return cli.NewExitError(err.Error(), 2)
+		return cli.Exit(err.Error(), 2)
 	}
 
 	logrus.Infof("entry removed: %s\n", strings.Join(hostEntries, " "))

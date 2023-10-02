@@ -55,7 +55,7 @@ func add(c *cli.Context) error {
 
 	err = hostsfile.Add(ip, hostEntries...)
 	if err != nil {
-		return cli.NewExitError(err.Error(), 2)
+		return cli.Exit(err.Error(), 2)
 	}
 
 	if c.Bool("clean") {
@@ -70,7 +70,7 @@ func add(c *cli.Context) error {
 
 	logrus.Debugln("flushing hosts file to disk")
 	if err := hostsfile.Flush(); err != nil {
-		return cli.NewExitError(err.Error(), 2)
+		return cli.Exit(err.Error(), 2)
 	}
 
 	logrus.Infof("hosts entry added: %s %s\n", ip, strings.Join(hostEntries, " "))

@@ -37,7 +37,7 @@ $ goodhosts -h
     goodhosts - manage your hosts file goodly
 
   USAGE:
-     main.exe [global options] command [command options] [arguments...]
+     goodosts [global options] command [command options] [arguments...]
   
   COMMANDS:
      add, a         Add an entry to the hostsfile

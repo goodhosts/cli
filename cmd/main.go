@@ -47,11 +47,11 @@ func loadHostsfile(c *cli.Context, readOnly bool) (*hostsfile.Hosts, error) {
 	}
 
 	if err != nil {
-		return hfile, cli.NewExitError(err, 1)
+		return hfile, cli.Exit(err, 1)
 	}
 
 	if !readOnly && !hfile.IsWritable() {
-		return hfile, cli.NewExitError("Host file not writable. Try running with elevated privileges.", 1)
+		return hfile, cli.Exit("Host file not writable. Try running with elevated privileges.", 1)
 	}
 
 	return hfile, nil

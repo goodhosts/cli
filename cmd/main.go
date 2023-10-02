@@ -26,7 +26,6 @@ func Commands() []*cli.Command {
 		List(),
 		Remove(),
 		Restore(),
-		Version(),
 	}
 }
 

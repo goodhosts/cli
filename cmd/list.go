@@ -21,11 +21,11 @@ func List() *cli.Command {
 }
 
 func list(c *cli.Context) error {
-	hostsfile, err := loadHostsfile(c, false)
+	hf, err := loadHostsfile(c, false)
 	if err != nil {
 		return err
 	}
 
-	outputHostsfile(hostsfile, c.Bool("all"))
+	outputHostsfile(hf, c.Bool("all"))
 	return debugFooter(c)
 }

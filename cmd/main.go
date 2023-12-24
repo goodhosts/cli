@@ -11,10 +11,6 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func Run(c *cli.Context) error {
-	return list(c)
-}
-
 func Commands() []*cli.Command {
 	return []*cli.Command{
 		Add(),
@@ -35,26 +31,26 @@ func DefaultAction(c *cli.Context) error {
 
 func loadHostsfile(c *cli.Context, readOnly bool) (*hostsfile.Hosts, error) {
 	customHostsfile := c.String("file")
-	var hfile *hostsfile.Hosts
+	var hf *hostsfile.Hosts
 	var err error
 
 	if customHostsfile != "" {
 		logrus.Debugf("loading custom hosts file: %s\n", customHostsfile)
-		hfile, err = hostsfile.NewCustomHosts(customHostsfile)
+		hf, err = hostsfile.NewCustomHosts(customHostsfile)
 	} else {
 		logrus.Debugf("loading default hosts file: %s\n", hostsfile.HostsFilePath)
-		hfile, err = hostsfile.NewHosts()
+		hf, err = hostsfile.NewHosts()
 	}
 
 	if err != nil {
-		return hfile, cli.Exit(err, 1)
+		return hf, cli.Exit(err, 1)
 	}
 
-	if !readOnly && !hfile.IsWritable() {
-		return hfile, cli.Exit("Host file not writable. Try running with elevated privileges.", 1)
+	if !readOnly && !hf.IsWritable() {
+		return hf, cli.Exit("Host file not writable. Try running with elevated privileges.", 1)
 	}
 
-	return hfile, nil
+	return hf, nil
 }
 
 func outputHostsfile(hf *hostsfile.Hosts, all bool) {
@@ -79,15 +75,15 @@ func debugFooter(c *cli.Context) error {
 		return nil
 	}
 
-	hostsfile, err := loadHostsfile(c, true)
+	hf, err := loadHostsfile(c, true)
 	if err != nil {
 		return err
 	}
 
-	logrus.Infof("hosts file path: %s\n", hostsfile.Path)
+	logrus.Infof("hosts file path: %s\n", hf.Path)
 
 	var comments, empty, entry, malformed int
-	for _, line := range hostsfile.Lines {
+	for _, line := range hf.Lines {
 
 		if line.IsComment() {
 			comments++
@@ -107,11 +103,11 @@ func debugFooter(c *cli.Context) error {
 	}
 
 	data := [][]string{
-		[]string{"lines", fmt.Sprintf("%d", len(hostsfile.Lines))},
-		[]string{"entries", fmt.Sprintf("%d", entry)},
-		[]string{"comments", fmt.Sprintf("%d", comments)},
-		[]string{"empty", fmt.Sprintf("%d", empty)},
-		[]string{"malformed", fmt.Sprintf("%d", malformed)},
+		{"lines", fmt.Sprintf("%d", len(hf.Lines))},
+		{"entries", fmt.Sprintf("%d", entry)},
+		{"comments", fmt.Sprintf("%d", comments)},
+		{"empty", fmt.Sprintf("%d", empty)},
+		{"malformed", fmt.Sprintf("%d", malformed)},
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
@@ -125,29 +121,40 @@ func debugFooter(c *cli.Context) error {
 	return nil
 }
 
-func copyFile(src, dst string) (int64, error) {
+func copyFile(src, dst string) (err error) {
 	logrus.Debugf("copying file: src %s, dst %s",
 		src, dst)
-	sourceFileStat, err := os.Stat(src)
+
+	var fi os.FileInfo
+	fi, err = os.Stat(src)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	if !sourceFileStat.Mode().IsRegular() {
-		return 0, fmt.Errorf("%s is not a regular file", src)
+	if !fi.Mode().IsRegular() {
+		return fmt.Errorf("%s is not a regular file", src)
 	}
 
-	source, err := os.Open(src)
+	var source *os.File
+	source, err = os.Open(src)
 	if err != nil {
-		return 0, err
+		return err
 	}
-	defer source.Close()
 
-	destination, err := os.Create(dst)
+	defer func() {
+		err = source.Close()
+	}()
+
+	var destination *os.File
+	destination, err = os.Create(dst)
 	if err != nil {
-		return 0, err
+		return err
 	}
-	defer destination.Close()
-	nBytes, err := io.Copy(destination, source)
-	return nBytes, err
+
+	defer func() {
+		err = destination.Close()
+	}()
+
+	_, err = io.Copy(destination, source)
+	return
 }

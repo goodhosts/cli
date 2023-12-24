@@ -32,7 +32,7 @@ func Remove() *cli.Command {
 
 func remove(c *cli.Context) error {
 	args := c.Args()
-	hostsfile, err := loadHostsfile(c, false)
+	hf, err := loadHostsfile(c, false)
 	if err != nil {
 		return err
 	}
@@ -42,7 +42,7 @@ func remove(c *cli.Context) error {
 	}
 
 	if args.Len() == 1 { //could be ip or hostname
-		return processSingleArg(hostsfile, args.Slice()[0])
+		return processSingleArg(hf, args.Slice()[0])
 	}
 
 	uniqueHosts := map[string]bool{}
@@ -57,8 +57,8 @@ func remove(c *cli.Context) error {
 	}
 
 	if net.ParseIP(args.Slice()[0]) != nil {
-		if hostsfile.HasIp(args.Slice()[0]) {
-			err = hostsfile.Remove(args.Slice()[0], hostEntries...)
+		if hf.HasIP(args.Slice()[0]) {
+			err = hf.Remove(args.Slice()[0], hostEntries...)
 			if err != nil {
 				return cli.Exit(err.Error(), 2)
 			}
@@ -66,24 +66,24 @@ func remove(c *cli.Context) error {
 	} else {
 		hostEntries = append(hostEntries, args.Slice()[0])
 		for _, value := range hostEntries {
-			if err := hostsfile.RemoveByHostname(value); err != nil {
+			if err := hf.RemoveByHostname(value); err != nil {
 				return err
 			}
 		}
 	}
 
 	if c.Bool("clean") {
-		hostsfile.Clean()
+		hf.Clean()
 	}
 
 	if c.Bool("dry-run") {
 		logrus.Debugln("performing a dry run, writing output")
-		outputHostsfile(hostsfile, true)
+		outputHostsfile(hf, true)
 		return debugFooter(c)
 	}
 
 	logrus.Debugln("flushing hosts file to disk")
-	if err := hostsfile.Flush(); err != nil {
+	if err := hf.Flush(); err != nil {
 		return cli.Exit(err.Error(), 2)
 	}
 
@@ -91,13 +91,11 @@ func remove(c *cli.Context) error {
 	return debugFooter(c)
 }
 
-func processSingleArg(hostsfile *hostsfile.Hosts, arg string) error {
+func processSingleArg(hf *hostsfile.Hosts, arg string) error {
 	if net.ParseIP(arg) != nil {
 		logrus.Infof("removing ip %s\n", arg)
-		if err := hostsfile.RemoveByIp(arg); err != nil {
-			return err
-		}
-		if err := hostsfile.Flush(); err != nil {
+		hf.RemoveByIP(arg)
+		if err := hf.Flush(); err != nil {
 			return err
 		}
 
@@ -106,10 +104,10 @@ func processSingleArg(hostsfile *hostsfile.Hosts, arg string) error {
 
 	logrus.Infof("removing hostname %s\n", arg)
 
-	if err := hostsfile.RemoveByHostname(arg); err != nil {
+	if err := hf.RemoveByHostname(arg); err != nil {
 		return err
 	}
-	if err := hostsfile.Flush(); err != nil {
+	if err := hf.Flush(); err != nil {
 		return err
 	}
 

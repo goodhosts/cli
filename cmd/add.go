@@ -28,7 +28,6 @@ func Add() *cli.Command {
 	}
 }
 func add(c *cli.Context) error {
-
 	args := c.Args()
 
 	if args.Len() < 2 {
@@ -36,7 +35,7 @@ func add(c *cli.Context) error {
 		return nil
 	}
 
-	hostsfile, err := loadHostsfile(c, false)
+	hf, err := loadHostsfile(c, false)
 	if err != nil {
 		return err
 	}
@@ -53,23 +52,23 @@ func add(c *cli.Context) error {
 		hostEntries = append(hostEntries, key)
 	}
 
-	err = hostsfile.Add(ip, hostEntries...)
+	err = hf.Add(ip, hostEntries...)
 	if err != nil {
 		return cli.Exit(err.Error(), 2)
 	}
 
 	if c.Bool("clean") {
-		hostsfile.Clean()
+		hf.Clean()
 	}
 
 	if c.Bool("dry-run") {
 		logrus.Debugln("performing a dry run, writing output")
-		outputHostsfile(hostsfile, true)
+		outputHostsfile(hf, true)
 		return debugFooter(c)
 	}
 
 	logrus.Debugln("flushing hosts file to disk")
-	if err := hostsfile.Flush(); err != nil {
+	if err := hf.Flush(); err != nil {
 		return cli.Exit(err.Error(), 2)
 	}
 

@@ -66,7 +66,7 @@ func clean(c *cli.Context) error {
 		h.Clean()
 	} else {
 		if c.Bool("remove-duplicate-ips") {
-			h.RemoveDuplicateIps()
+			h.CombineDuplicateIPs()
 		}
 		if c.Bool("remove-duplicate-hosts") {
 			h.RemoveDuplicateHosts()
@@ -75,7 +75,7 @@ func clean(c *cli.Context) error {
 			h.SortHosts()
 		}
 		if c.Bool("sort-ips") {
-			h.SortByIp()
+			h.SortIPs()
 		}
 		// needed for windows for 9/line, -1 default for linux will noop but if passed by cli we will run
 		h.HostsPerLine(hostsfile.HostsPerLine)

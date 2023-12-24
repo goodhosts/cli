@@ -23,20 +23,20 @@ func check(c *cli.Context) error {
 		return nil
 	}
 
-	hostsfile, err := loadHostsfile(c, true)
+	hf, err := loadHostsfile(c, true)
 	if err != nil {
 		return err
 	}
 	input := c.Args().First()
 
 	if net.ParseIP(input) != nil {
-		if hostsfile.HasIp(input) {
+		if hf.HasIP(input) {
 			logrus.Infof("%s exists in hosts file\n", input)
 			return nil
 		}
 	}
 
-	if hostsfile.HasHostname(input) {
+	if hf.HasHostname(input) {
 		logrus.Infof("%s exists in hosts file\n", input)
 		return nil
 	}

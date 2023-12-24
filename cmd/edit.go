@@ -25,12 +25,12 @@ func Edit() *cli.Command {
 }
 
 func edit(c *cli.Context) error {
-	hostsfile, err := loadHostsfile(c, false)
+	hf, err := loadHostsfile(c, false)
 	if err != nil {
 		return err
 	}
 
-	cmd := exec.Command(c.String("editor"), hostsfile.Path)
+	cmd := exec.Command(c.String("editor"), hf.Path)
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr

@@ -23,7 +23,7 @@ func Backup() *cli.Command {
 }
 
 func backup(c *cli.Context) error {
-	hostsfile, err := loadHostsfile(c, false)
+	hf, err := loadHostsfile(c, false)
 	if err != nil {
 		return err
 	}
@@ -31,14 +31,14 @@ func backup(c *cli.Context) error {
 	output := c.String("output")
 	if output == "" {
 		output = filepath.Join(
-			filepath.Dir(hostsfile.Path),
-			"."+filepath.Base(hostsfile.Path))
+			filepath.Dir(hf.Path),
+			"."+filepath.Base(hf.Path))
 	}
 
-	_, err = copyFile(hostsfile.Path, output)
-	if err != nil {
+	if err := copyFile(hf.Path, output); err != nil {
 		return err
 	}
+
 	logrus.Infof("backup complete")
 	return debugFooter(c)
 }

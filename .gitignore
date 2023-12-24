@@ -1,8 +1,10 @@
+coverage.txt
 .DS_Store
 /goodhosts
 /goodhosts.exe
 /.idea
 /dist
+/bin
 /out
 /release
 

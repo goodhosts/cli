@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/sirupsen/logrus"
@@ -21,11 +20,7 @@ func main() {
 	}
 }
 
-func formatVersion(version, commit, date string) string {
-	return fmt.Sprintf("goodhosts %s@%s built on %s", version, commit, date)
-}
-
 func run(args []string) error {
-	cmd.Version(formatVersion(version, commit, date))
+	cmd.Version(version, commit, date)
 	return cmd.App.Run(args)
 }

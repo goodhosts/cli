@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 
 	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
@@ -33,11 +34,22 @@ func Ci() error {
 	return nil
 }
 
+// build goodhosts cli locally
+func Build() error {
+	fmt.Println("Building goodhosts...")
+	out := "goodhosts"
+	if runtime.GOOS == "windows" {
+		out = "goodhosts.exe"
+	}
+	sh.RunV("go", "build", "-o", out, "main.go")
+	return nil
+}
+
 // run the linter
 func Lint() error {
 	mg.Deps(install.Golangcilint)
 	fmt.Println("Running Linter...")
-	return sh.RunV("./bin/golangci-lint", "run")
+	return sh.RunV("golangci-lint", "run")
 }
 
 // delete files and paths made by mage

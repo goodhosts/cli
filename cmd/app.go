@@ -8,7 +8,59 @@ import (
 	"github.com/goodhosts/hostsfile"
 	"github.com/olekukonko/tablewriter"
 	"github.com/sirupsen/logrus"
+	easy "github.com/t-tomalak/logrus-easy-formatter"
 	"github.com/urfave/cli/v2"
+)
+
+var (
+	version string
+	App     = &cli.App{
+		Name:   "goodhosts",
+		Usage:  "manage your hosts file goodly",
+		Action: DefaultAction,
+		Commands: append(Commands(), &cli.Command{
+			Name:    "version",
+			Usage:   "",
+			Aliases: []string{"v", "ver"},
+			Action: func(c *cli.Context) error {
+				logrus.Infof(version)
+				return nil
+			},
+		}),
+		Before: func(ctx *cli.Context) error {
+			if ctx.Bool("debug") {
+				logrus.SetLevel(logrus.DebugLevel)
+				logrus.SetFormatter(&logrus.TextFormatter{})
+			} else {
+				// treat logrus like fmt.Print
+				logrus.SetFormatter(&easy.Formatter{
+					LogFormat: "%msg%",
+				})
+			}
+			if ctx.Bool("quiet") {
+				logrus.SetOutput(io.Discard)
+			}
+			return nil
+		},
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:    "file",
+				Aliases: []string{"f"},
+				Value:   "",
+				Usage:   fmt.Sprintf("override the default hosts: %s", hostsfile.HostsFilePath),
+			},
+			&cli.BoolFlag{
+				Name:    "debug",
+				Aliases: []string{"d"},
+				Usage:   "Turn on verbose debug logging",
+			},
+			&cli.BoolFlag{
+				Name:    "quiet",
+				Aliases: []string{"q"},
+				Usage:   "Turn on off all logging",
+			},
+		},
+	}
 )
 
 func Commands() []*cli.Command {
@@ -23,6 +75,10 @@ func Commands() []*cli.Command {
 		Remove(),
 		Restore(),
 	}
+}
+
+func Version(v string) {
+	version = v
 }
 
 func DefaultAction(c *cli.Context) error {
@@ -43,11 +99,11 @@ func loadHostsfile(c *cli.Context, readOnly bool) (*hostsfile.Hosts, error) {
 	}
 
 	if err != nil {
-		return hf, cli.Exit(err, 1)
+		return hf, err
 	}
 
 	if !readOnly && !hf.IsWritable() {
-		return hf, cli.Exit("Host file not writable. Try running with elevated privileges.", 1)
+		return hf, fmt.Errorf("Hostsfile %s not writable. Try running with elevated privileges.", hf.Path)
 	}
 
 	return hf, nil

@@ -25,7 +25,7 @@ func Build() error {
 // Coverage run all unit tests and output coverage
 func Coverage() error {
 	fmt.Println("Running Tests with Coverage...")
-	return sh.RunV("go", "test", "-v", "-coverprofile=coverage.txt", ".")
+	return sh.RunV("go", "test", "-v", "-coverprofile=coverage.txt", "./...")
 }
 
 // HTML display the html coverage report from the cover tool

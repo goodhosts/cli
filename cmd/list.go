@@ -21,7 +21,7 @@ func List() *cli.Command {
 }
 
 func list(c *cli.Context) error {
-	hf, err := loadHostsfile(c, false)
+	hf, err := loadHostsfile(c, true)
 	if err != nil {
 		return err
 	}

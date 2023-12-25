@@ -77,8 +77,8 @@ func Commands() []*cli.Command {
 	}
 }
 
-func Version(v string) {
-	version = v
+func Version(v, c, d string) {
+	version = fmt.Sprintf("goodhosts %s@%s built on %s", v, c, d)
 }
 
 func DefaultAction(c *cli.Context) error {

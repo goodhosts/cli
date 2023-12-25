@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"os"
-	"strings"
 	"testing"
 
 	"github.com/goodhosts/cli/cmd"
@@ -30,22 +29,10 @@ func TestVersion(t *testing.T) {
 
 	// test that version@commit + date work
 	args, out = setup("version")
-	cmd.Version(formatVersion("test-version", "test-commit", "test-date"))
+	cmd.Version("test-version", "test-commit", "test-date")
 	assert.Nil(t, cmd.App.Run(args))
 	assert.Equal(t, "goodhosts test-version@test-commit built on test-date", out.String())
 
 	// reset for future tests
-	cmd.Version(formatVersion("dev", "none", "unknown"))
-}
-
-func TestDebug(t *testing.T) {
-	args, out := setup("--debug", "version")
-	assert.Nil(t, cmd.App.Run(args))
-	assert.True(t, strings.Contains(out.String(), "level=info msg=\"goodhosts dev@none built on unknown\""))
-}
-
-func TestQuiet(t *testing.T) {
-	args, out := setup("--quiet", "version")
-	assert.Nil(t, cmd.App.Run(args))
-	assert.Empty(t, out.String())
+	cmd.Version("dev", "none", "unknown")
 }

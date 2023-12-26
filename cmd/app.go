@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -117,12 +118,15 @@ func outputHostsfile(hf *hostsfile.Hosts, all bool) {
 			}
 		}
 
-		lineOutput := fmt.Sprintf("%s\n", line.Raw)
+		lineOutput := line.Raw
 		if line.IsMalformed() {
-			lineOutput = fmt.Sprintf("%s # <<< Malformed!\n", lineOutput)
+			logrus.Debugf("malformed line: %s", line.Err)
+			if !line.HasComment() {
+				lineOutput = fmt.Sprintf("%s #", lineOutput)
+			}
+			lineOutput = fmt.Sprintf("%s <<< Malformed!", lineOutput)
 		}
-
-		logrus.Infof(lineOutput)
+		logrus.Info(lineOutput + "\n")
 	}
 }
 
@@ -166,13 +170,15 @@ func debugFooter(c *cli.Context) error {
 		{"malformed", fmt.Sprintf("%d", malformed)},
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
+	buf := &bytes.Buffer{}
+	table := tablewriter.NewWriter(buf)
 	table.SetHeader([]string{"Type", "Count"})
 
 	for _, v := range data {
 		table.Append(v)
 	}
 	table.Render()
+	logrus.Info(buf)
 
 	return nil
 }

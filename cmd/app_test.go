@@ -11,7 +11,7 @@ import (
 	easy "github.com/t-tomalak/logrus-easy-formatter"
 )
 
-func TestDebug(t *testing.T) {
+func TestDebugFlag(t *testing.T) {
 	args, out := setup("--debug", "version")
 	Version("test-version", "test-commit", "test-date")
 	assert.Nil(t, App.Run(args))
@@ -47,10 +47,10 @@ func read(t *testing.T, name, file string) func() {
 	}
 }
 
-//func write(t *testing.T, name, file string) func() {
-//	err := os.WriteFile(name, []byte(file), 0770)
-//	assert.Nil(t, err)
-//	return func() {
-//		assert.Nil(t, os.Remove(name))
-//	}
-//}
+func write(t *testing.T, name, file string) func() {
+	err := os.WriteFile(name, []byte(file), 0770)
+	assert.Nil(t, err)
+	return func() {
+		assert.Nil(t, os.Remove(name))
+	}
+}

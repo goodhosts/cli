@@ -21,6 +21,14 @@ func TestList(t *testing.T) {
 	})
 
 	// this is really a noop but future proofs us a bit
+	t.Run("default action", func(t *testing.T) {
+		defer read(t, "test-list", "127.0.0.1 localhost")()
+		args, out := setup("-f", "test-list")
+		assert.Empty(t, App.Run(args))
+		assert.Equal(t, "127.0.0.1 localhost"+"\n", out.String())
+	})
+
+	// this is really a noop but future proofs us a bit
 	t.Run("hostsfile that is write accessible", func(t *testing.T) {
 		defer write(t, "test-list", "127.0.0.1 localhost")()
 		args, out := setup("-f", "test-list", "list")

@@ -1,5 +1,6 @@
 # goodhosts cli, fork of Lex Toumbourou's project [goodhosts](https://github.com/lextoumbourou/goodhosts)
 
+[![codecov](https://codecov.io/gh/goodhosts/cli/graph/badge.svg?token=S926B79ZJS)](https://codecov.io/gh/goodhosts/cli)
 [![Go Reference](https://pkg.go.dev/badge/github.com/goodhosts/cli.svg)](https://pkg.go.dev/github.com/goodhosts/cli)
 [![Go Report Card](https://goreportcard.com/badge/github.com/goodhosts/cli)](https://goreportcard.com/report/github.com/goodhosts/cli)
 

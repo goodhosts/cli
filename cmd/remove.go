@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"net"
 	"strings"
 
@@ -32,13 +33,14 @@ func Remove() *cli.Command {
 
 func remove(c *cli.Context) error {
 	args := c.Args()
+
+	if args.Len() == 0 {
+		return errors.New("no input")
+	}
+
 	hf, err := loadHostsfile(c, false)
 	if err != nil {
 		return err
-	}
-
-	if args.Len() == 0 {
-		return cli.Exit("no input", 1)
 	}
 
 	if args.Len() == 1 { //could be ip or hostname
@@ -60,11 +62,11 @@ func remove(c *cli.Context) error {
 		if hf.HasIP(args.Slice()[0]) {
 			err = hf.Remove(args.Slice()[0], hostEntries...)
 			if err != nil {
-				return cli.Exit(err.Error(), 2)
+				return err
 			}
 		}
 	} else {
-		hostEntries = append(hostEntries, args.Slice()[0])
+		hostEntries = append([]string{args.Slice()[0]}, hostEntries...)
 		for _, value := range hostEntries {
 			if err := hf.RemoveByHostname(value); err != nil {
 				return err
@@ -95,21 +97,12 @@ func processSingleArg(hf *hostsfile.Hosts, arg string) error {
 	if net.ParseIP(arg) != nil {
 		logrus.Infof("removing ip %s\n", arg)
 		hf.RemoveByIP(arg)
-		if err := hf.Flush(); err != nil {
-			return err
-		}
-
-		return nil
+		return hf.Flush()
 	}
 
 	logrus.Infof("removing hostname %s\n", arg)
-
 	if err := hf.RemoveByHostname(arg); err != nil {
 		return err
 	}
-	if err := hf.Flush(); err != nil {
-		return err
-	}
-
-	return nil
+	return hf.Flush()
 }

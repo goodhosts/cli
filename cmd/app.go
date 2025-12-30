@@ -60,6 +60,15 @@ var (
 				Aliases: []string{"q"},
 				Usage:   "Turn on off all logging",
 			},
+			&cli.BoolFlag{
+				Name:    "backup",
+				Aliases: []string{"b"},
+				Usage:   "Create backup before modifying hosts file",
+			},
+			&cli.BoolFlag{
+				Name:  "safe",
+				Usage: "Check for concurrent modifications before writing",
+			},
 		},
 	}
 )
@@ -108,6 +117,28 @@ func loadHostsfile(c *cli.Context, readOnly bool) (*hostsfile.Hosts, error) {
 	}
 
 	return hf, nil
+}
+
+func flushHostsfile(c *cli.Context, hf *hostsfile.Hosts) error {
+	if c.Bool("safe") {
+		modified, err := hf.HasBeenModified()
+		if err != nil {
+			return err
+		}
+		if modified {
+			return fmt.Errorf("hosts file was modified by another process; reload and retry")
+		}
+	}
+
+	if c.Bool("backup") {
+		if err := hf.Backup(); err != nil {
+			logrus.Warnf("Failed to create backup: %v", err)
+		} else {
+			logrus.Debugf("Backup created at: %s", hf.BackupPath())
+		}
+	}
+
+	return hf.Flush()
 }
 
 func outputHostsfile(hf *hostsfile.Hosts, all bool) {

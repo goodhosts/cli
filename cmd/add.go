@@ -68,7 +68,7 @@ func add(c *cli.Context) error {
 	}
 
 	logrus.Debugln("flushing hosts file to disk")
-	if err := hf.Flush(); err != nil {
+	if err := flushHostsfile(c, hf); err != nil {
 		return cli.Exit(err.Error(), 2)
 	}
 

@@ -3,7 +3,7 @@ module github.com/goodhosts/cli
 go 1.21
 
 require (
-	github.com/goodhosts/hostsfile v0.1.6
+	github.com/goodhosts/hostsfile v0.1.7
 	github.com/magefile/mage v1.15.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/sirupsen/logrus v1.9.3
@@ -26,6 +26,3 @@ require (
 	golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-// Use local hostsfile library with VVV improvements
-replace github.com/goodhosts/hostsfile => ../hostsfile

@@ -3,11 +3,11 @@ module github.com/goodhosts/cli
 go 1.21
 
 require (
-	github.com/goodhosts/hostsfile v0.1.6
+	github.com/goodhosts/hostsfile v0.1.7
 	github.com/magefile/mage v1.15.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/sirupsen/logrus v1.9.3
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.8.4
 	github.com/t-tomalak/logrus-easy-formatter v0.0.0-20190827215021-c074f06c5816
 	github.com/urfave/cli/v2 v2.26.0
 	github.com/uwu-tools/magex v0.10.0

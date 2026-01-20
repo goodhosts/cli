@@ -87,7 +87,7 @@ func clean(c *cli.Context) error {
 		return debugFooter(c)
 	}
 
-	if err := h.Flush(); err != nil {
+	if err := flushHostsfile(c, h); err != nil {
 		return cli.Exit(err.Error(), 2)
 	}
 	return debugFooter(c)
